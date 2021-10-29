@@ -8,6 +8,7 @@ public class VaccinationApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(VaccinationApplication.class, args);
+		System.out.println("sadasd");
 	}
 
 }
