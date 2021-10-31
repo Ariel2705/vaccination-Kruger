@@ -1,22 +1,27 @@
 package ec.com.kruger.vaccination.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 
-@Table(name = "address", indexes = {
-        @Index(name = "relationship_6_fk", columnList = "cod_parroquia")
-})
+@Table(name = "address")
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_address", nullable = false)
     private Integer id;
 
-    public Integer getId() {
-        return id;
-    }
+    @JoinColumn(name = "cod_parish", nullable = false)
+    private Integer codParish;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(name = "main_address", nullable = false, length = 32)
+    private String mainAddress;
+
+    @Column(name = "side_street", nullable = false, length = 32)
+    private String sideStreet;
 }
