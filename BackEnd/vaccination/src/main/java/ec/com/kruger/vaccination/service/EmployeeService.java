@@ -206,7 +206,7 @@ public class EmployeeService {
     private boolean validateCI(String identification) {
         int sum = 0;
         int mul = 2;
-        int res;
+        int res = 0;
         if (identification.length() == 10) {
             for (int i = 0; i < 9; i++) {
                 int num = Integer.parseInt(Character.toString(identification.charAt(i))) * mul;

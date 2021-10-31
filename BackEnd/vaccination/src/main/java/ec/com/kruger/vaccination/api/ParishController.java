@@ -1,7 +1,6 @@
 package ec.com.kruger.vaccination.api;
 
 import ec.com.kruger.vaccination.model.Parish;
-import ec.com.kruger.vaccination.security.Authorization;
 import ec.com.kruger.vaccination.service.ParishService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

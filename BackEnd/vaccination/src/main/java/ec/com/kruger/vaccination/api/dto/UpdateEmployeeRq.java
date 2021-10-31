@@ -1,18 +1,20 @@
 package ec.com.kruger.vaccination.api.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEmployeeRq {
 
     private String identification;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String phone;
     private Integer codParish;
     private String mainAddress;

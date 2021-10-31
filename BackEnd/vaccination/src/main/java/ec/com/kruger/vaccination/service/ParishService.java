@@ -21,17 +21,13 @@ public class ParishService {
     }
 
     public List<Parish> listParishesByNameCanton(String canton) throws DocumentNotFoundException {
-        try {
-            List<Parish> parishes = this.parishRepo.findByNameCanton(canton);
-            if (!parishes.isEmpty()) {
-                log.info("Listing the parishes of the canton: " + canton);
-                return parishes;
-            } else {
-                log.error("There are no parishes for the canton: " + canton);
-                throw new DocumentNotFoundException("There are no registered parishes in the canton: " + canton);
-            }
-        } catch (Exception e) {
-            throw new DocumentNotFoundException("Error when searching for parishes by canton." + e);
+        List<Parish> parishes = this.parishRepo.findByNameCanton(canton);
+        if (!parishes.isEmpty()) {
+            log.info("Listing the parishes of the canton: " + canton);
+            return parishes;
+        } else {
+            log.error("There are no parishes for the canton: " + canton);
+            throw new DocumentNotFoundException("There are no registered parishes in the canton: " + canton);
         }
     }
 }
