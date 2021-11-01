@@ -33,6 +33,7 @@ public class EmployeeUserService {
 
     public UserRq login(String username, String pwd)
             throws DocumentNotFoundException, CredentialInvalidException {
+
         EmployeeUser user = userRepo.findByUsername(username);
         if (user != null) {
             if (user.getPassword().equals(pwd)) {
@@ -47,7 +48,7 @@ public class EmployeeUserService {
     }
 
     private String getJwtToken(EmployeeUser user) {
-        String secretKey = "Kruger";
+        String secretKey = secret;
         Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 

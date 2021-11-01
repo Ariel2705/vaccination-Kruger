@@ -50,7 +50,7 @@ public class DetailVaccinationController {
             @ApiResponse(code = 200, message = "Vaccination detail found."),
             @ApiResponse(code = 404, message = "There is no detail for this code.")
     })
-    public ResponseEntity<List<DetailVaccination>> findDetailByCodEmployee(@PathVariable Integer code){
+    public ResponseEntity<DetailVaccination> findDetailByCodEmployee(@PathVariable Integer code){
         try{
             return ResponseEntity.ok(this.service.findDetailByCodEmployee(code));
         } catch (Exception e) {

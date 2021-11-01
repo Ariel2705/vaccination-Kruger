@@ -1,5 +1,6 @@
 package ec.com.kruger.vaccination.service;
 
+import ec.com.kruger.vaccination.api.dto.CompleteDataEmployeeRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
 import ec.com.kruger.vaccination.exception.DocumentNotFoundException;
 import ec.com.kruger.vaccination.exception.InsertException;
@@ -58,36 +59,22 @@ public class EmployeeServiceUnitTest {
     public void givenUpdateEmployeeRqCompleteEmployee() {
         LocalDate date = LocalDate.now();
         Employee employee = new Employee();
-        UpdateEmployeeRq updateEmployee = new UpdateEmployeeRq();
-        updateEmployee.setIdentification("1804915617");
-        updateEmployee.setBirthDate(date);
-        updateEmployee.setCodParish(1);
-        updateEmployee.setPhone("0999256438");
-        updateEmployee.setMainAddress("MainStreet");
-        updateEmployee.setSideStreet("SideStreet");
+        CompleteDataEmployeeRq completeDataEmployeeRq = new CompleteDataEmployeeRq();
+        completeDataEmployeeRq.setIdentification("1804915617");
+        completeDataEmployeeRq.setBirthDate(date);
+        completeDataEmployeeRq.setCodParish(1);
+        completeDataEmployeeRq.setPhone("0999256438");
+        completeDataEmployeeRq.setMainAddress("MainStreet");
+        completeDataEmployeeRq.setSideStreet("SideStreet");
 
         try {
             when(repository.findByIdentification(any())).thenReturn(employee);
-            service.completeDataEmployee(updateEmployee);
+            service.completeDataEmployee(completeDataEmployeeRq);
             verify(repository, times(1)).save(employee);
         } catch (UpdateException ex) {
             Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @Test
-    public void givenIdentificationReturnEmployee() {
-        String identification = "1804915617";
-        Employee employee = repository.findByIdentification(identification);
-        try {
-            Assertions.assertEquals(employee, service.findEmployeeByIdentification(identification));
-        } catch (DocumentNotFoundException ex) {
-            Logger.getLogger(EmployeeServiceUnitTest.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-
 
     @Test
     public void givenStateVaccinationReturnEmployees() {
@@ -130,12 +117,28 @@ public class EmployeeServiceUnitTest {
     }
 
     @Test
-    public void givenIdentificationReturnEmployeeChangeState() {
+    public void givenIdentificationReturnEmployee() {
         String identification = "testIdentification";
+        Employee employee = this.repository.findByIdentification(identification);
         try {
-            Employee employee = this.repository.findByIdentification(identification);
+            when(repository.findByIdentification(any())).thenReturn(employee);
             service.findEmployeeByIdentification(identification);
         } catch (DocumentNotFoundException ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Test
+    public void givenIdentificationReturnEmployeeChangeState() {
+        String identification = "testIdentification";
+        Employee employee = repository.findByIdentification(identification);
+        try {
+            when(repository.findByIdentification(any())).thenReturn(employee);
+            service.changeStateEmployee(identification);
+            verify(repository, times(1)).save(employee);
+        } catch (UpdateException ex) {
             Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
@@ -150,14 +153,14 @@ public class EmployeeServiceUnitTest {
     @Test
     public void givenNullCodParishThrowUpdateException() {
         LocalDate date = LocalDate.now();
-        UpdateEmployeeRq updateEmployee = new UpdateEmployeeRq();
-        updateEmployee.setIdentification("1804915617");
-        updateEmployee.setBirthDate(date);
-        updateEmployee.setCodParish(null);
-        updateEmployee.setPhone("0999256438");
-        updateEmployee.setMainAddress("MainStreet");
-        updateEmployee.setSideStreet("SideStreet");
-        Assertions.assertThrows(UpdateException.class, () -> service.completeDataEmployee(updateEmployee));
+        CompleteDataEmployeeRq completeDataEmployeeRq = new CompleteDataEmployeeRq();
+        completeDataEmployeeRq.setIdentification("1804915617");
+        completeDataEmployeeRq.setBirthDate(date);
+        completeDataEmployeeRq.setCodParish(null);
+        completeDataEmployeeRq.setPhone("0999256438");
+        completeDataEmployeeRq.setMainAddress("MainStreet");
+        completeDataEmployeeRq.setSideStreet("SideStreet");
+        Assertions.assertThrows(UpdateException.class, () -> service.completeDataEmployee(completeDataEmployeeRq));
     }
 
 }

@@ -11,19 +11,11 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateEmployeeRq {
+public class CompleteDataEmployeeRq {
     private String identification;
-    private String names;
-    private String surnames;
-    private String email;
-    private LocalDate birthdate;
+    private LocalDate birthDate;
     private String phone;
-    private String state;
-    private String stateVaccination;
     private Integer codParish;
     private String mainAddress;
     private String sideStreet;
-    private String vaccineType;
-    private LocalDate vaccineDate;
-    private Integer vaccineDoses;
 }

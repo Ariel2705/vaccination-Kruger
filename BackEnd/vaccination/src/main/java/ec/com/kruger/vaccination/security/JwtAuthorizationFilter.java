@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    @Value("${secretKey}")
-    private static String secretKey;
-
     private static final String HEADER = "Authorization";
     private static final String PREFIX = "Bearer ";
     private static final String SECRET = "Kruger";

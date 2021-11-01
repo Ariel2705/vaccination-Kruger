@@ -1,5 +1,6 @@
 package ec.com.kruger.vaccination.service;
 
+import ec.com.kruger.vaccination.api.dto.CompleteDataEmployeeRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
 import ec.com.kruger.vaccination.enums.NewEmployeeEnum;
 import ec.com.kruger.vaccination.enums.StateEmployeeEnum;
@@ -12,6 +13,7 @@ import ec.com.kruger.vaccination.model.DetailVaccination;
 import ec.com.kruger.vaccination.model.Employee;
 import ec.com.kruger.vaccination.model.EmployeeUser;
 import ec.com.kruger.vaccination.repository.AddressRepository;
+import ec.com.kruger.vaccination.repository.DetailVaccinationRepository;
 import ec.com.kruger.vaccination.repository.EmployeeRepository;
 import ec.com.kruger.vaccination.repository.EmployeeUserRepository;
 import ec.com.kruger.vaccination.security.Authorization;
@@ -36,6 +38,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepo;
     private final AddressRepository addressRepo;
     private final EmployeeUserRepository userRepo;
+    private final DetailVaccinationRepository detailVaccinationRepo;
 
     @Value("${userAuthorization}")
     private String userAuthorization;
@@ -47,10 +50,11 @@ public class EmployeeService {
     private String domainKruger;
 
     public EmployeeService(EmployeeRepository employeeRepo, AddressRepository addressRepo,
-                           EmployeeUserRepository userRepo) {
+                           EmployeeUserRepository userRepo, DetailVaccinationRepository detailVaccinationRepo) {
         this.employeeRepo = employeeRepo;
         this.addressRepo = addressRepo;
         this.userRepo = userRepo;
+        this.detailVaccinationRepo = detailVaccinationRepo;
     }
 
     public void createEmployee(Employee employee) throws InsertException {
@@ -84,9 +88,67 @@ public class EmployeeService {
         }
     }
 
-    //public void editEmployee()
+    public void updateEmployee(UpdateEmployeeRq updateEmployeeRq) throws UpdateException {
+        try {
+            Employee employee = this.employeeRepo.findByIdentification(updateEmployeeRq.getIdentification());
+            if(employee != null) {
+                log.info("Updating data of employee.");
+                employee.setNames((updateEmployeeRq.getNames() != null)
+                        ? updateEmployeeRq.getNames() : employee.getNames());
+                employee.setSurnames((updateEmployeeRq.getSurnames() != null && validateNames(updateEmployeeRq.getNames(), updateEmployeeRq.getSurnames()))
+                        ? updateEmployeeRq.getSurnames() : employee.getSurnames());
+                employee.setEmail((updateEmployeeRq.getEmail() != null && validateMail(updateEmployeeRq.getEmail()))
+                        ? updateEmployeeRq.getEmail() : employee.getEmail());
+                employee.setBirthdate((updateEmployeeRq.getBirthdate() != null)
+                        ? updateEmployeeRq.getBirthdate() : employee.getBirthdate());
+                employee.setPhone((updateEmployeeRq.getPhone() != null)
+                        ? updateEmployeeRq.getPhone() : employee.getPhone());
+                employee.setState((updateEmployeeRq.getState() != null)
+                        ? updateEmployeeRq.getState() : employee.getState());
+                employee.setStateVaccination((updateEmployeeRq.getStateVaccination() != null)
+                        ? updateEmployeeRq.getStateVaccination() : employee.getStateVaccination());
+                if(employee.getCodAddress() != null){
+                    log.info("Update address");
 
-    public void completeDataEmployee(UpdateEmployeeRq employee) throws UpdateException {
+                    Optional<Address> address = this.addressRepo.findById(employee.getCodAddress());
+
+                    address.get().setCodParish((updateEmployeeRq.getCodParish() != null)
+                            ? updateEmployeeRq.getCodParish() : address.get().getCodParish());
+                    address.get().setMainAddress((updateEmployeeRq.getMainAddress() != null)
+                            ? updateEmployeeRq.getMainAddress() : address.get().getMainAddress());
+                    address.get().setSideStreet((updateEmployeeRq.getSideStreet() != null)
+                            ? updateEmployeeRq.getSideStreet() : address.get().getSideStreet());
+                    this.addressRepo.save(address.get());
+                } else {
+                    throw new DocumentNotFoundException("No address assigned to the user.");
+                }
+
+                if(StateVaccinationEnum.SI.getState().equals(employee.getStateVaccination())){
+                    log.info("Updating details");
+
+                    DetailVaccination detail = this.detailVaccinationRepo.findByCodEmployee(employee.getId());
+
+                    detail.setVaccineType((updateEmployeeRq.getVaccineType() != null)
+                            ? updateEmployeeRq.getVaccineType() : detail.getVaccineType());
+                    detail.setVaccineDate((updateEmployeeRq.getVaccineDate() != null)
+                            ? updateEmployeeRq.getVaccineDate() : detail.getVaccineDate());
+                    detail.setVaccineDoses((updateEmployeeRq.getVaccineDoses() != null)
+                            ? updateEmployeeRq.getVaccineDoses() : detail.getVaccineDoses());
+
+                    this.detailVaccinationRepo.save(detail);
+                } else {
+                    throw new DocumentNotFoundException("There is no vaccination detail for the user..");
+                }
+                this.employeeRepo.save(employee);
+            } else {
+                throw new DocumentNotFoundException("There is no employee to update.");
+            }
+        } catch (Exception e) {
+            throw new UpdateException("Employee", "An error occurred while updating the employee: " + updateEmployeeRq.toString(), e);
+        }
+    }
+
+    public void completeDataEmployee(CompleteDataEmployeeRq employee) throws UpdateException {
         try {
             Employee employeeUpdate = this.employeeRepo.findByIdentification(employee.getIdentification());
             if (employeeUpdate != null) {
@@ -104,10 +166,10 @@ public class EmployeeService {
                 employeeUpdate.setCodAddress(addressCreate.getId());
                 this.employeeRepo.save(employeeUpdate);
             } else {
-                throw new UpdateException("Employee", "There is no employee to update.");
+                throw new DocumentNotFoundException("There is no employee to update his data.");
             }
         } catch (Exception e) {
-            throw new UpdateException("Employee", "An error occurred while updating the employee: " + employee.toString(), e);
+            throw new UpdateException("Employee", "An error occurred while complete the data the employee: " + employee.toString(), e);
         }
     }
 
@@ -235,10 +297,10 @@ public class EmployeeService {
         return false;
     }
 
-    private boolean validateNames(String names, String Surnames) {
+    private boolean validateNames(String names, String surnames) {
         Pattern pat = Pattern.compile("([A-Za-zÀ-ÿ\\u00f1\\u00d1]+)( )([A-Za-zÀ-ÿ\\u00f1\\u00d1]+)");
         Matcher matherName = pat.matcher(names);
-        Matcher matherSurname = pat.matcher(names);
+        Matcher matherSurname = pat.matcher(surnames);
         if (matherName.find() && matherSurname.find()) {
             return true;
         }

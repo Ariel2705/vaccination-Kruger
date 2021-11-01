@@ -1,5 +1,6 @@
 package ec.com.kruger.vaccination.api;
 
+import ec.com.kruger.vaccination.api.dto.CompleteDataEmployeeRq;
 import ec.com.kruger.vaccination.api.dto.DetailByDateRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
 import ec.com.kruger.vaccination.exception.DocumentNotFoundException;
@@ -64,24 +65,24 @@ public class EmployeeControllerUnitTest {
     @Test
     public void givenUpdateEmployeeRqReturnOk() {
         EmployeeController controller = new EmployeeController(service);
-        UpdateEmployeeRq updateEmployeeRq = new UpdateEmployeeRq();
+        CompleteDataEmployeeRq completeDataEmployeeRq = new CompleteDataEmployeeRq();
         ResponseEntity response = ResponseEntity.ok().build();
-        Assertions.assertEquals(response, controller.completeData(updateEmployeeRq));
+        Assertions.assertEquals(response, controller.completeData(completeDataEmployeeRq));
     }
 
     @Test
     public void givenUpdateEmployeeRqReturnBadRequest() {
         EmployeeController controller = new EmployeeController(service);
-        UpdateEmployeeRq updateEmployeeRq = new UpdateEmployeeRq();
+        CompleteDataEmployeeRq completeDataEmployeeRq = new CompleteDataEmployeeRq();
         try {
             Mockito.doThrow(UpdateException.class)
                     .when(service)
-                    .completeDataEmployee(updateEmployeeRq);
+                    .completeDataEmployee(completeDataEmployeeRq);
         } catch (UpdateException ex) {
             Logger.getLogger(EmployeeControllerUnitTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         ResponseEntity response = ResponseEntity.badRequest().build();
-        Assertions.assertEquals(response, controller.completeData(updateEmployeeRq));
+        Assertions.assertEquals(response, controller.completeData(completeDataEmployeeRq));
     }
 
     @Test

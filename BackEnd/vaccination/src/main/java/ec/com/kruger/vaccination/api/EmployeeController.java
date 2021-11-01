@@ -1,5 +1,6 @@
 package ec.com.kruger.vaccination.api;
 
+import ec.com.kruger.vaccination.api.dto.CompleteDataEmployeeRq;
 import ec.com.kruger.vaccination.api.dto.DetailByDateRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
 import ec.com.kruger.vaccination.exception.InsertException;
@@ -44,6 +45,23 @@ public class EmployeeController {
         }
     }
 
+    @PreAuthorize("hasRole('ADM')")
+    @PutMapping("/updateEmployee")
+    @ApiOperation(value = "Employee update",
+            notes = "The tables related to the employee are updated. Details and address.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Employee updated."),
+            @ApiResponse(code = 400, message = "Error updating an employee.")
+    })
+    public ResponseEntity<UpdateEmployeeRq> updateEmployee(@RequestBody UpdateEmployeeRq updateEmployeeRq) {
+        try {
+            this.service.updateEmployee(updateEmployeeRq);
+            return ResponseEntity.ok().build();
+        } catch (UpdateException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PreAuthorize("hasRole('ADM') OR hasRole('EMP')")
     @PutMapping("/completeDataEmployee")
     @ApiOperation(value = "Complete employee data.",
@@ -52,10 +70,10 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Complete data by employee."),
             @ApiResponse(code = 400, message = "Error when completing employee data.")
     })
-    public ResponseEntity<UpdateEmployeeRq> completeData(
-            @RequestBody UpdateEmployeeRq updateEmployeeRq) {
+    public ResponseEntity<CompleteDataEmployeeRq> completeData(
+            @RequestBody CompleteDataEmployeeRq completeDataEmployeeRq) {
         try {
-            this.service.completeDataEmployee(updateEmployeeRq);
+            this.service.completeDataEmployee(completeDataEmployeeRq);
             return ResponseEntity.ok().build();
         } catch (UpdateException ex) {
             return ResponseEntity.badRequest().build();

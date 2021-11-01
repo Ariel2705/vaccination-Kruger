@@ -1,15 +1,15 @@
 package ec.com.kruger.vaccination.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Table(name = "detail_vaccination")
 @Entity
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DetailVaccination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

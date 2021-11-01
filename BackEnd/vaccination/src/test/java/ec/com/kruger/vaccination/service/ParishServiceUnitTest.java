@@ -23,6 +23,7 @@ public class ParishServiceUnitTest {
 
     @InjectMocks
     private ParishService service;
+    @InjectMocks
     private Parish parish;
 
     @BeforeEach
@@ -32,11 +33,12 @@ public class ParishServiceUnitTest {
 
     @Test
     public void givenCantonReturnListOfParishes() {
-        String canton = "132456789";
+        parish.setName("nameTest");
+        parish.setNameCanton("nameCantonTest");
         List<Parish> parishes
-                = repository.findByNameCanton(canton);
+                = repository.findByNameCanton(parish.getName());
         try {
-            Assertions.assertEquals(parishes, service.listParishesByNameCanton(canton));
+            Assertions.assertEquals(parishes, service.listParishesByNameCanton(parish.getName()));
         } catch (DocumentNotFoundException ex) {
             Logger.getLogger(ParishServiceUnitTest.class
                     .getName()).log(Level.SEVERE, null, ex);

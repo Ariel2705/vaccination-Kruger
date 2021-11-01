@@ -42,10 +42,10 @@ public class DetailVaccinationService {
 
     }
 
-    public List<DetailVaccination> findDetailByCodEmployee(Integer code) throws DocumentNotFoundException {
+    public DetailVaccination findDetailByCodEmployee(Integer code) throws DocumentNotFoundException {
         try{
-            List<DetailVaccination> details = this.detailVaccinationRepo.findByCodEmployee(code);
-            if(!details.isEmpty()) {
+            DetailVaccination details = this.detailVaccinationRepo.findByCodEmployee(code);
+            if(details != null) {
                 log.info("List of details for employee code.");
                 return details;
             } else {

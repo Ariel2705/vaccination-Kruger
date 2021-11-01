@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(maxAge = 3600)
@@ -24,13 +23,13 @@ public class EmployeeUserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "Autenticación de ususarios",
-            notes = "Se accede al sistema dependiendo del ROL del usuario, "
-                    + "devuelve un token para utilizarlo en header (Authorization)")
+    @ApiOperation(value = "User authentication.",
+            notes = "Access to the system depending on the user role, "
+                    + "returns a token for use in header (Authorization).")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Acceso autorizado"),
-            @ApiResponse(code = 400, message = "Credenciales incorrectas"),
-            @ApiResponse(code = 404, message = "Usuario incorrecto")})
+            @ApiResponse(code = 200, message = "Authorized access."),
+            @ApiResponse(code = 400, message = "Incorrect credentials."),
+            @ApiResponse(code = 404, message = "Incorrect user or password.")})
     public ResponseEntity<UserRq> login(@RequestBody LoginRq login) {
         try {
             return ResponseEntity

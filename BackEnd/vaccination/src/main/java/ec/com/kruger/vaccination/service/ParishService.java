@@ -3,9 +3,7 @@ package ec.com.kruger.vaccination.service;
 import ec.com.kruger.vaccination.exception.DocumentNotFoundException;
 import ec.com.kruger.vaccination.model.Parish;
 import ec.com.kruger.vaccination.repository.ParishRepository;
-import ec.com.kruger.vaccination.security.Authorization;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
