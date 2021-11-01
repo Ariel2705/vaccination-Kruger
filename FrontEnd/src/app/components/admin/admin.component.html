@@ -1,0 +1,103 @@
+<div class="container">
+    
+    <h2>Salir</h2>
+    <button mat-button (click)="exit()">Salir</button>
+    <h2>{{title}}</h2>
+    <button mat-button (click)="openDialogCreate()">Crear empleado</button>
+    <form #employeeListForm="ngForm" (ngSubmit)="onSubmit()">
+        <p>
+            <label>Opciones de búsqueda</label>
+            <select name="options" [(ngModel)]="options">
+                <option value=1>Estado de vacunacion</option>
+                <option value=2>Tipo de vacuna</option>
+                <option value=3>Fecha de vacunacion</option>
+            </select>
+        </p>
+        <p *ngIf="options == '1'">
+            <label for="stateVaccination">Estado de vacunacion</label>
+            <select name="stateVaccination" [(ngModel)]="stateVaccination">
+                <option value="SI">
+                    Vacunado
+                </option>
+                <option value="NO">
+                    No Vacunado
+                </option>
+            </select>
+        </p>
+        <p *ngIf="options == '2'">
+            <label for="typeVaccine">Tipo de vacuna</label>
+            <select name="typeVaccine" [(ngModel)]="typeVaccine">
+                <option value="SPUTNIK">
+                    SPUTNIK
+                </option>
+                <option value="ASTRAZENECA">
+                    ASTRAZENECA
+                </option>
+                <option value="PFIZER">
+                    PFIZER
+                </option>
+                <option value="JHONSON&JHONSON">
+                    JHONSON&JHONSON
+                </option>
+            </select>
+        </p>
+        <p *ngIf="options == '3'">
+            <label for="initialDate">Fecha de inicial</label>
+            <input type="date" name="initialDate" [(ngModel)]="initialDate">
+            <label for="finalDate">Fecha de final</label>
+            <input type="date" name="finalDate" [(ngModel)]="finalDate">
+        </p>
+        <input type="submit" value="Buscar" [disabled]="!employeeListForm.form.valid">
+    </form>
+</div>
+
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ejem: 1804915617" #input>
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSourceEmployee" class="mat-elevation-z8" matSort
+    aria-describedby="Tabla de empleados por parámetros.">
+
+    <ng-container matColumnDef="identification">
+        <th mat-header-cell *matHeaderCellDef id="identification"> identificación </th>
+        <td mat-cell *matCellDef="let element"> {{element.identification}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="names">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header id="names"> Nombres </th>
+        <td mat-cell *matCellDef="let element"> {{element.names}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="surnames">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header id="surnames"> Apellidos </th>
+        <td mat-cell *matCellDef="let element"> {{element.surnames}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header id="phone"> Telefono </th>
+        <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="stateVaccination">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header id="stateVaccination"> Vacunado </th>
+        <td mat-cell *matCellDef="let element"> {{element.stateVaccination}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actionsClientList">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header id="actionsClientList"> Opciones </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-button (click)="openDialogUpdate(element)">Editar</button>
+            <button mat-button (click)="openDialogDetails(element)">Detalles</button>
+            <button mat-button (click)="deleteEmployee(element.identification)">Eliminar</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="8"></td>
+    </tr>
+</table>
+
+

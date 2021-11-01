@@ -1,0 +1,91 @@
+<button mat-button (click)="exit()">Salir</button>
+<hr />
+<div *ngIf="stateVaccination === 'NO'">
+
+    <form #employeeCompleteDataForm="ngForm" (ngSubmit)="onSubmit(employeeCompleteDataForm)">
+        <div class="message success" *ngIf="statusUpdate == 'success'">
+            El empleado se actualizó correctamente sus datos.
+        </div>
+        <div class="message failed" *ngIf="statusUpdate == 'failed'">
+            Ocurrió un error al actualizar los datos.
+        </div>
+        <label for="birthDate">Fecha de nacimiento</label>
+        <input type="date" name="birthDate" [(ngModel)]="birthDate">
+
+
+        <label for="codParish">Parroquias</label>
+        <select name="codParish" name="codParish" [(ngModel)]="codParish">
+            <option *ngFor="let parish of this.parishes" value="{{parish.id}}">
+                {{parish.name}}
+            </option>
+        </select>
+        <label for="mainAddress">Calle Principal</label>
+        <input type="text" name="mainAddress" [(ngModel)]="mainAddress">
+        <label for="sideStreet">Calle Secundaria</label>
+        <input type="text" name="sideStreet" [(ngModel)]="sideStreet">
+
+
+
+        <label for="phone">Telefono</label>
+        <input type="text" name="phone" [(ngModel)]="phone">
+        <label for="stateVaccinationU">Vacunado</label>
+        <select name="stateVaccinationU" [(ngModel)]="stateVaccinationU">
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+        </select>
+        <div *ngIf="stateVaccinationU === 'SI'">
+            <label for="typeVaccine">Vacuna</label>
+            <select name="typeVaccine" [(ngModel)]="typeVaccine">
+                <option value="SPUTNIK">
+                    SPUTNIK
+                </option>
+                <option value="ASTRAZENECA">
+                    ASTRAZENECA
+                </option>
+                <option value="PFIZER">
+                    PFIZER
+                </option>
+                <option value="JHONSON&JHONSON">
+                    JHONSON&JHONSON
+                </option>
+            </select>
+            <label for="dateVaccine">Fecha de vacunacion</label>
+            <input type="date" name="dateVaccine" [(ngModel)]="dateVaccine">
+            <label for="vaccineDoses">Dosis</label>
+            <input type="number" name="vaccineDoses" [(ngModel)]="vaccineDoses">
+        </div>
+
+        <p class="spacer"></p>
+        <input type="submit" value="Enviar" [disabled]="!employeeCompleteDataForm.form.valid" style="margin-left: 50%;">
+    </form>
+
+</div>
+<div *ngIf="stateVaccination === 'SI'">
+    <p>
+        <label for="identification">Documento de identificación: {{identification}}</label>
+    </p>
+    <p>
+        <label for="names">Nombres: {{names}}</label>
+    </p>
+    <p>
+        <label for="surnames">Apellidos: {{surnames}}</label>
+    </p>
+    <p>
+        <label for="email">email: {{email}}</label>
+    </p>
+    <p>
+        <label for="birthdate">Fecha de Nac.: {{birthDate}}</label>
+    </p>
+    <p>
+        <label for="phone">Telefono: {{phone}}</label>
+    </p>
+    <p>
+        <label for="vaccineType">Tipo de vacuna: {{typeVaccine}}</label>
+    </p>
+    <p>
+        <label for="vaccineDate">Fecha de vacuna: {{dateVaccine}}</label>
+    </p>
+    <p>
+        <label for="vaccineDoses">Dosis: {{vaccineDoses}}</label>
+    </p>
+</div>

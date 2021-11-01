@@ -1,0 +1,22 @@
+<form #employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)">
+    <div class="message success" *ngIf="status == 'success'">
+        El cliente se ha registrado correctamente.
+    </div>
+    <div class="message failed" *ngIf="status == 'failed'">
+    Ocurrió un error al registar el empleado.
+    </div>
+    <p>
+        <label for="identification">Documento de identificación</label>
+        <input type="text" name="identification" [(ngModel)]="employee.identification" required>
+        <label for="identification">Nombre</label>
+        <input type="text" name="identification" [(ngModel)]="employee.names" required>
+        <label for="identification">Apellidos</label>
+        <input type="text" name="identification" [(ngModel)]="employee.surnames" required>
+        <label for="identification">email</label>
+        <input type="text" name="identification" [(ngModel)]="employee.email" required>
+
+    </p>
+
+    <p class="spacer"></p>
+    <input type="submit" value="Enviar" [disabled]="!employeeForm.form.valid" style="margin-left: 50%;">
+</form>
