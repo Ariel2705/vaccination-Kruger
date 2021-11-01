@@ -1,16 +1,12 @@
 package ec.com.kruger.vaccination.api;
 
 import ec.com.kruger.vaccination.api.dto.DetailByDateRq;
-import ec.com.kruger.vaccination.api.dto.LoginRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
 import ec.com.kruger.vaccination.exception.DocumentNotFoundException;
 import ec.com.kruger.vaccination.exception.InsertException;
 import ec.com.kruger.vaccination.exception.UpdateException;
 import ec.com.kruger.vaccination.model.Employee;
-import ec.com.kruger.vaccination.model.EmployeeUser;
-import ec.com.kruger.vaccination.model.Parish;
 import ec.com.kruger.vaccination.service.EmployeeService;
-import ec.com.kruger.vaccination.service.EmployeeUserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -173,7 +168,7 @@ public class EmployeeControllerUnitTest {
     public void givenTypeVaccineReturnEmployees() {
         String typeVaccine = "typeVaccineEmployee";
         EmployeeController controller = new EmployeeController(service);
-        List<Optional<Employee>> employees = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         try {
             lenient().when(service.findEmployeeByTypeVaccine(typeVaccine))
                     .thenReturn(employees);
@@ -205,7 +200,7 @@ public class EmployeeControllerUnitTest {
         LocalDate finalDate = LocalDate.now();
         DetailByDateRq detailByDateRq = new DetailByDateRq();
         EmployeeController controller = new EmployeeController(service);
-        List<Optional<Employee>> employees = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         try {
             lenient().when(service.findEmployeeByDates(initialDate, finalDate))
                     .thenReturn(employees);

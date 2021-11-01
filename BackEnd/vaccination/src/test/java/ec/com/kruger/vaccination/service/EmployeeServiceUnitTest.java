@@ -1,21 +1,14 @@
 package ec.com.kruger.vaccination.service;
 
-import ec.com.kruger.vaccination.api.EmployeeUserController;
-import ec.com.kruger.vaccination.api.dto.LoginRq;
 import ec.com.kruger.vaccination.api.dto.UpdateEmployeeRq;
-import ec.com.kruger.vaccination.api.dto.UserRq;
-import ec.com.kruger.vaccination.exception.CredentialInvalidException;
 import ec.com.kruger.vaccination.exception.DocumentNotFoundException;
 import ec.com.kruger.vaccination.exception.InsertException;
 import ec.com.kruger.vaccination.exception.UpdateException;
 import ec.com.kruger.vaccination.model.Employee;
 import ec.com.kruger.vaccination.model.EmployeeUser;
-import ec.com.kruger.vaccination.repository.AddressRepository;
 import ec.com.kruger.vaccination.repository.EmployeeRepository;
 import ec.com.kruger.vaccination.repository.EmployeeUserRepository;
-import ec.com.kruger.vaccination.security.Authorization;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,11 +28,7 @@ public class EmployeeServiceUnitTest {
     @Mock
     private EmployeeRepository repository;
     @Mock
-    private AddressRepository addressRepository;
-    @Mock
     private EmployeeUserRepository employeeUserRepository;
-    @Mock
-    private Authorization authorizationRq;
     @InjectMocks
     private EmployeeService service;
 
@@ -103,12 +92,53 @@ public class EmployeeServiceUnitTest {
     @Test
     public void givenStateVaccinationReturnEmployees() {
         String stateVaccination = "SI";
-        List<Employee> employees = repository.findByStateVaccination(stateVaccination);
+        String state = "ACT";
+        List<Employee> employees = repository.findByStateVaccinationAndState(stateVaccination, state);
         try {
             Assertions.assertEquals(employees, service.findEmployeeByStateVaccination(stateVaccination));
         } catch (DocumentNotFoundException ex) {
             Logger.getLogger(EmployeeServiceUnitTest.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Test
+    public void givenTypeVaccineReturnEmployees() {
+        String typeVaccine = "testVaccine";
+
+        try {
+            service.findEmployeeByTypeVaccine(typeVaccine);
+        } catch (DocumentNotFoundException ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Test
+    public void givenDatesReturnEmployees() {
+        LocalDate initialDate = LocalDate.now();
+        LocalDate finalDate = LocalDate.now();
+
+        try {
+            service.findEmployeeByDates(initialDate, finalDate);
+        } catch (DocumentNotFoundException ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Test
+    public void givenIdentificationReturnEmployeeChangeState() {
+        String identification = "testIdentification";
+        try {
+            Employee employee = this.repository.findByIdentification(identification);
+            service.findEmployeeByIdentification(identification);
+        } catch (DocumentNotFoundException ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeServiceUnitTest.class.getSimpleName()).log(Level.SEVERE, null, ex);
         }
     }
 

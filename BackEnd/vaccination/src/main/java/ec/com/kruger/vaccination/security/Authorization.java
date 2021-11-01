@@ -8,20 +8,17 @@ public class Authorization {
     private String username;
     private String pwd;
 
-    @Value("${domainKruger}")
-    private String domainKruger;
-
     public Authorization(String username, String pwd) {
         this.username = username;
         this.pwd = pwd;
     }
 
-    public String tokenAuthorize() throws Exception {
+    public String tokenAuthorization() throws Exception {
         try {
             JSONObject userAuthorize = new JSONObject();
             userAuthorize.put("username", this.username);
             userAuthorize.put("pwd", this.pwd);
-            String authorization = Unirest.post(domainKruger + "security/login")
+            String authorization = Unirest.post("http://localhost:8080/api/kruger/security/login")
                     .header("Content-Type", "application/json")
                     .body(userAuthorize).asJson().getBody().getObject().getString("token");
             return authorization;

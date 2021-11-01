@@ -22,7 +22,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String HEADER = "Authorization";
     private static final String PREFIX = "Bearer ";
-    private static final String SECRET = secretKey;
+    private static final String SECRET = "Kruger";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

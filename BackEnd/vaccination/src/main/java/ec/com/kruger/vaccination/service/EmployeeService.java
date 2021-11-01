@@ -36,7 +36,6 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepo;
     private final AddressRepository addressRepo;
     private final EmployeeUserRepository userRepo;
-    private final Authorization authorizationRq;
 
     @Value("${userAuthorization}")
     private String userAuthorization;
@@ -52,7 +51,6 @@ public class EmployeeService {
         this.employeeRepo = employeeRepo;
         this.addressRepo = addressRepo;
         this.userRepo = userRepo;
-        this.authorizationRq = new Authorization(userAuthorization, passwordAuthorization);
     }
 
     public void createEmployee(Employee employee) throws InsertException {
@@ -140,7 +138,7 @@ public class EmployeeService {
 
     public List<Employee> findEmployeeByStateVaccination(String stateVaccination) throws DocumentNotFoundException {
         try {
-            List<Employee> employees = this.employeeRepo.findByStateVaccination(stateVaccination);
+            List<Employee> employees = this.employeeRepo.findByStateVaccinationAndState(stateVaccination, StateEmployeeEnum.ACTIVE.getState());
             if (!employees.isEmpty()) {
                 log.info("Listing employees with vaccination status: " + stateVaccination);
                 return employees;
@@ -152,20 +150,21 @@ public class EmployeeService {
         }
     }
 
-    public List<Optional<Employee>> findEmployeeByTypeVaccine(String vaccine) throws DocumentNotFoundException {
+    public List<Employee> findEmployeeByTypeVaccine(String vaccine) throws DocumentNotFoundException {
         try {
-            List<Optional<Employee>> employees = new ArrayList<>();
+            Authorization authorizationRq = new Authorization("1804915617", "Kruger123");
+            String authorization = authorizationRq.tokenAuthorization();
+            List<Employee> employees = new ArrayList<>();
             List<DetailVaccination> request = Unirest
-                    .get(domainKruger + "detailVaccination/findDetailByTypeVaccine/{type}")
-                    .header("Authorization", authorizationRq.tokenAuthorize())
+                    .get("http://localhost:8080/api/kruger/detailVaccination/findDetailByTypeVaccine/{type}")
+                    .header("Authorization", authorization)
                     .routeParam("type", vaccine)
                     .asObject(new GenericType<List<DetailVaccination>>() {})
                     .getBody();
-
             if (!request.isEmpty()) {
                 for (DetailVaccination detail: request) {
                     log.info("Listing employees by type of vaccine.");
-                    employees.add(this.employeeRepo.findById(detail.getCodEmployee()));
+                    employees.add(this.employeeRepo.findByIdAndState(detail.getCodEmployee(), StateEmployeeEnum.ACTIVE.getState()));
                 }
                 return employees;
             } else {
@@ -176,23 +175,26 @@ public class EmployeeService {
         }
     }
 
-    public List<Optional<Employee>> findEmployeeByDates(LocalDate initialDate, LocalDate finalDate) throws DocumentNotFoundException {
+    public List<Employee> findEmployeeByDates(LocalDate initialDate, LocalDate finalDate) throws DocumentNotFoundException {
         try {
-            List<Optional<Employee>> employees = new ArrayList<>();
+            Authorization authorizationRq = new Authorization("1804915617", "Kruger123");
+            String authorization = authorizationRq.tokenAuthorization();
+            List<Employee> employees = new ArrayList<>();
             JSONObject object = new JSONObject();
             object.put("initialDate", initialDate);
             object.put("finalDate", finalDate);
             List<DetailVaccination> request = Unirest
-                    .post(domainKruger + "detailVaccination/findDetailByDates")
+                    .post("http://localhost:8080/api/kruger/detailVaccination/findDetailByDates")
                     .header("Content-Type", "application/json")
-                    .header("Authorization", authorizationRq.tokenAuthorize())
+                    .header("Authorization", authorization)
                     .body(object)
                     .asObject(new GenericType<List<DetailVaccination>>() {})
                     .getBody();
+
             if (!request.isEmpty()) {
                 for (DetailVaccination detail: request) {
                     log.info("Listing employees by vaccination date.");
-                    employees.add(this.employeeRepo.findById(detail.getCodEmployee()));
+                    employees.add(this.employeeRepo.findByIdAndState(detail.getCodEmployee(), StateEmployeeEnum.ACTIVE.getState()));
                 }
                 return employees;
             } else {

@@ -36,11 +36,15 @@ public class DetailVaccinationControllerUnitTest {
     private DetailVaccinationService service;
 
     @InjectMocks
+    private DetailByDateRq detailByDateRq;
+
+    @InjectMocks
     DetailVaccination detailVaccination;
 
     @BeforeEach
     public void setUp() {
         detailVaccination = new DetailVaccination();
+        detailByDateRq = new DetailByDateRq();
     }
 
     @Test
@@ -117,7 +121,7 @@ public class DetailVaccinationControllerUnitTest {
     public void givenDatesReturnNotFound() {
         LocalDate initialDate = LocalDate.now();
         LocalDate finalDate = LocalDate.now();
-        DetailByDateRq detailByDateRq = new DetailByDateRq();
+        detailByDateRq = new DetailByDateRq();
         DetailVaccinationController controller = new DetailVaccinationController(service);
         try {
             Mockito.doThrow(DocumentNotFoundException.class)

@@ -80,7 +80,7 @@ public class EmployeeController {
         }
     }
 
-    @PreAuthorize("hasRole('ADM')")
+    @PreAuthorize("hasRole('ADM') OR hasRole('EMP')")
     @GetMapping("/findEmployeeById/{identification}")
     @ApiOperation(value = "Search for an employee by their DNI.",
             notes = "There are no two or more employees registered in the database with the same DNI.")
@@ -121,7 +121,7 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Employees found by type of vaccine."),
             @ApiResponse(code = 404, message = "There are no employees vaccinated with this type of vaccine.")
     })
-    public ResponseEntity<List<Optional<Employee>>> findEmployeeByTypeVaccine(
+    public ResponseEntity<List<Employee>> findEmployeeByTypeVaccine(
             @PathVariable String vaccine) {
         try {
             return ResponseEntity.ok(this.service.findEmployeeByTypeVaccine(vaccine));
@@ -138,7 +138,7 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Employees found by date."),
             @ApiResponse(code = 404, message = "There are no employees vaccinated at this time.")
     })
-    public ResponseEntity<List<Optional<Employee>>> findEmployeeByDates(@RequestBody DetailByDateRq detailByDateRq) {
+    public ResponseEntity<List<Employee>> findEmployeeByDates(@RequestBody DetailByDateRq detailByDateRq) {
         try {
             return ResponseEntity.ok(this.service.findEmployeeByDates(
                     detailByDateRq.getInitialDate(),

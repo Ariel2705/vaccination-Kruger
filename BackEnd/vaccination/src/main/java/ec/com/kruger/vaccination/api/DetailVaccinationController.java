@@ -42,6 +42,22 @@ public class DetailVaccinationController {
         }
     }
 
+    @PreAuthorize("hasRole('ADM') OR hasRole('EMP')")
+    @GetMapping("/findDetailByCodEmployee/{code}")
+    @ApiOperation(value = "Search for vaccination details by employee code.",
+            notes = "Search for vaccination details by employee code.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Vaccination detail found."),
+            @ApiResponse(code = 404, message = "There is no detail for this code.")
+    })
+    public ResponseEntity<List<DetailVaccination>> findDetailByCodEmployee(@PathVariable Integer code){
+        try{
+            return ResponseEntity.ok(this.service.findDetailByCodEmployee(code));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PreAuthorize("hasRole('ADM')")
     @GetMapping("/findDetailByTypeVaccine/{vaccine}")
     @ApiOperation(value = "Search for vaccination details by vaccine type.",

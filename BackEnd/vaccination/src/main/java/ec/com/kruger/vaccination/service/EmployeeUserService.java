@@ -47,7 +47,7 @@ public class EmployeeUserService {
     }
 
     private String getJwtToken(EmployeeUser user) {
-        String secretKey = secret;
+        String secretKey = "Kruger";
         Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 

@@ -42,6 +42,20 @@ public class DetailVaccinationService {
 
     }
 
+    public List<DetailVaccination> findDetailByCodEmployee(Integer code) throws DocumentNotFoundException {
+        try{
+            List<DetailVaccination> details = this.detailVaccinationRepo.findByCodEmployee(code);
+            if(!details.isEmpty()) {
+                log.info("List of details for employee code.");
+                return details;
+            } else {
+                throw new DocumentNotFoundException("There are no records of details for this code.");
+            }
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error when searching for details by employee code");
+        }
+    }
+
     public List<DetailVaccination> findDetailByTypeVaccine(String vaccine) throws DocumentNotFoundException {
         try{
             List<DetailVaccination> details = this.detailVaccinationRepo.findByVaccineType(vaccine);
